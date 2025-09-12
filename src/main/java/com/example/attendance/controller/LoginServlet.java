@@ -31,7 +31,6 @@ public class LoginServlet extends HttpServlet {
         User user = userDAO.findByUsername(username);
 
         if (user == null) {
-            // ユーザーが存在しない場合
             req.setAttribute("errorMessage", "ユーザーが存在しません。");
             RequestDispatcher rd = req.getRequestDispatcher("/login.jsp");
             rd.forward(req, resp);
@@ -72,7 +71,6 @@ public class LoginServlet extends HttpServlet {
             }
 
         } else {
-            // ユーザーが存在するがパスワード不一致 or 無効
             req.setAttribute("errorMessage", "ユーザーIDまたはパスワードが不正です。またはアカウントが無効です。");
             RequestDispatcher rd = req.getRequestDispatcher("/login.jsp");
             rd.forward(req, resp);

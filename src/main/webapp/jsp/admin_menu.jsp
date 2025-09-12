@@ -8,15 +8,11 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style.css">
 </head>
 <body>
+	<jsp:include page="/jsp/header.jsp" />
+	
     <div class="container">
         <h1>管理者メニュー</h1>
         <p>ようこそ, ${user.username}さん (管理者)</p>
-
-        <div class="main-nav">
-            <a href="attendance?action=filter">勤怠履歴管理</a>
-            <a href="users?action=list">ユーザー管理</a>
-            <a href="logout">ログアウト</a>
-        </div>
 
         <c:if test="${not empty sessionScope.successMessage}">
             <p class="success-message">
@@ -51,9 +47,9 @@
         	<p class="error-message"><c:out value="${errorMessage}"/></p>
     	</c:if>
 
-        <a href="attendance?action=export_csv&filterUserId=<c:out value='${param.filterUserId}'/>&startDate=<c:out value='${param.startDate}'/>&endDate=<c:out value='${param.endDate}'/>" class="button">勤怠履歴を CSV エクスポート</a>
+        <a href="attendance?action=export_csv&filterUserId=<c:out value='${param.filterUserId}'/>&startDate=<c:out value='${param.startDate}'/>&endDate=<c:out value='${param.endDate}'/>" class="button buttond">勤怠履歴を CSV エクスポート</a>
 
-        <h3>勤怠サマリー (合計労働時間)</h3>
+        <h2>勤怠サマリー (合計労働時間)</h2>
         <table class="summary-table">
             <thead>
                 <tr>
@@ -74,24 +70,28 @@
             </tbody>
         </table>
 
-        <h3>月別勤怠グラフ (簡易版)</h3>
+        <h2>月別勤怠グラフ (簡易版)</h2>
         <h4>月別合計労働時間</h4>
         <pre>
-<c:forEach var="entry" items="${monthlyWorkingHours}">
-${entry.key}: <c:forEach begin="1" end="${entry.value / 5}">*</c:forEach> ${entry.value}時間
-</c:forEach>
-<c:if test="${empty monthlyWorkingHours}">データがありません。</c:if>
+			<c:forEach var="entry" items="${monthlyWorkingHours}">
+			${entry.key}:
+			<c:if test="${entry.value > 0}">
+			    <c:forEach begin="1" end="${entry.value / 5}">*</c:forEach>
+			</c:if>
+			 ${entry.value > 0 ? entry.value : 0}時間
+			</c:forEach>
+			<c:if test="${empty monthlyWorkingHours}">データがありません。</c:if>
+			        </pre>
+			
+			        <h4>月別出勤日数</h4>
+			        <pre>
+			<c:forEach var="entry" items="${monthlyCheckInCounts}">
+			${entry.key}: <c:forEach begin="1" end="${entry.value}">■</c:forEach> ${entry.value}日
+			</c:forEach>
+			<c:if test="${empty monthlyCheckInCounts}">データがありません。</c:if>
         </pre>
 
-        <h4>月別出勤日数</h4>
-        <pre>
-<c:forEach var="entry" items="${monthlyCheckInCounts}">
-${entry.key}: <c:forEach begin="1" end="${entry.value}">■</c:forEach> ${entry.value}日
-</c:forEach>
-<c:if test="${empty monthlyCheckInCounts}">データがありません。</c:if>
-        </pre>
-
-        <h3>詳細勤怠履歴</h3>
+        <h2>詳細勤怠履歴</h2>
         <table>
             <thead>
                 <tr>
@@ -105,14 +105,15 @@ ${entry.key}: <c:forEach begin="1" end="${entry.value}">■</c:forEach> ${entry.
                 <c:forEach var="att" items="${allAttendanceRecords}">
                     <tr>
                         <td>${att.userId}</td>
-                        <td>${att.checkInTime}</td>
-                        <td>${att.checkOutTime}</td>
+                        <td>${att.isoCheckInTime}</td>
+						<td>${att.isoCheckOutTime}</td>
+
                         <td class="table-actions">
                             <form action="attendance" method="post" style="display:inline;">
                                 <input type="hidden" name="action" value="delete_manual">
                                 <input type="hidden" name="userId" value="${att.userId}">
-                                <input type="hidden" name="checkInTime" value="${att.checkInTime}">
-                                <input type="hidden" name="checkOutTime" value="${att.checkOutTime}">
+                                <input type="hidden" name="checkInTime" value="${att.isoCheckInTime}">
+								<input type="hidden" name="checkOutTime" value="${att.isoCheckOutTime}">
                                 <input type="submit" value="削除" class="button danger"
                                        onclick="return confirm('本当にこの勤怠記録を削除しますか？');">
                             </form>
@@ -124,6 +125,90 @@ ${entry.key}: <c:forEach begin="1" end="${entry.value}">■</c:forEach> ${entry.
                 </c:if>
             </tbody>
         </table>
+        
+        <h2>有給申請一覧</h2>
+		<table>
+		    <thead>
+		        <tr>
+		            <th>従業員 ID</th>
+		            <th>日付</th>
+		            <th>申請状況</th>
+		            <th>承認操作</th>
+		        </tr>
+		    </thead>
+		    <tbody>
+		        <c:forEach var="req" items="${leaveRequests}">
+		            <tr>
+		                <td>${req.userId}</td>
+		                <td>${req.date}</td>
+		                <td>
+		                    <c:choose>
+		                        <c:when test="${req.paidLeaveApproved}">承認済み</c:when>
+		                        <c:otherwise>申請中</c:otherwise>
+		                    </c:choose>
+		                </td>
+		                <td>
+		                    <c:if test="${!req.paidLeaveApproved}">
+		                        <form action="employee_request_admin" method="post" style="display:inline;">
+		                            <input type="hidden" name="action" value="approve_leave"/>
+		                            <input type="hidden" name="username" value="${req.userId}"/>
+		                            <input type="hidden" name="date" value="${req.date}"/>
+		                            <input type="submit" value="承認" class="button"/>
+		                        </form>
+		                    </c:if>
+		                </td>
+		            </tr>
+		        </c:forEach>
+		        <c:if test="${empty leaveRequests}">
+		            <tr><td colspan="4">申請がありません。</td></tr>
+		        </c:if>
+		    </tbody>
+		</table>
+
+
+
+
+	       <h2>残業申請一覧</h2>
+		<table>
+		    <thead>
+		        <tr>
+		            <th>ユーザー</th>
+		            <th>日付</th>
+		            <th>時間</th>
+		            <th>状態</th>
+		            <th>操作</th>
+		        </tr>
+		    </thead>
+		    <tbody>
+		        <c:forEach var="req" items="${overtimeRequests}">
+		            <tr>
+		                <td>${req.userId}</td>
+		                <td>${req.date}</td>
+		                <td>${req.overtimeHours}</td>
+		                <td>
+		                    <c:choose>
+		                        <c:when test="${req.overtimeApproved}">承認済み</c:when>
+		                        <c:otherwise>未承認</c:otherwise>
+		                    </c:choose>
+		                </td>
+		                <td>
+		                    <c:if test="${!req.overtimeApproved}">
+		                        <form action="employee_request_admin" method="post" style="display:inline;">
+		                            <input type="hidden" name="action" value="approve_overtime"/>
+		                            <input type="hidden" name="username" value="${req.userId}"/>
+		                            <input type="hidden" name="date" value="${req.date}"/>
+		                            <input type="submit" value="承認" class="button"/>
+		                        </form>
+		                    </c:if>
+		                </td>
+		            </tr>
+		        </c:forEach>
+		        <c:if test="${empty overtimeRequests}">
+		            <tr><td colspan="5">申請がありません。</td></tr>
+		        </c:if>
+		    </tbody>
+		</table>
+
 
         <h2>勤怠記録の手動追加</h2>
         <form action="attendance" method="post">
@@ -145,5 +230,8 @@ ${entry.key}: <c:forEach begin="1" end="${entry.value}">■</c:forEach> ${entry.
             </div>
         </form>
     </div>
+    
+    <script src="${pageContext.request.contextPath}/style.js?v=1"></script>
+    
 </body>
 </html>

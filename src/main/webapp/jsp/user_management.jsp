@@ -8,15 +8,11 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style.css">
 </head>
 <body>
+<jsp:include page="/jsp/header.jsp" />
+
 <div class="container">
     <h1>ユーザー管理</h1>
     <p>ようこそ, ${user.username}さん (管理者)</p>
-
-    <div class="main-nav">
-        <a href="attendance?action=filter">勤怠履歴管理</a>
-        <a href="users?action=list">ユーザー管理</a>
-        <a href="logout">ログアウト</a>
-    </div>
 
     <c:if test="${not empty sessionScope.successMessage}">
         <p class="success-message"><c:out value="${sessionScope.successMessage}"/></p>
@@ -40,16 +36,23 @@
 
                 <!-- <label for="password">パスワード:</label>
                 <input type="password" id="password" name="password"> -->
+                
+                <label for="password">パスワード:</label>
+				<input type="password" id="password" name="password"placeholder="変更する場合は入力してください">
 
-                <p class="error-message">
-                    ※一度設定したパスワードは変更できません。パスワードをリセットする場合はパスワードリセットボタン押してください。
-                </p>
+             <!--    <p class="error-message">
+                    ※一度設定したパスワードは変更できません。
+                </p> -->
+                
+                <!-- パスワードをリセットする場合はパスワードリセットボタン押してください。 -->
 
                 <label for="role">役割:</label>
-                <select id="role" name="role" required>
-                    <option value="employee" <c:if test="${userToEdit.role == 'employee'}">selected</c:if>>従業員</option>
-                    <option value="admin" <c:if test="${userToEdit.role == 'admin'}">selected</c:if>>管理者</option>
-                </select>
+				<select id="role" name="role" required>
+				    <option value="admin" <c:if test="${userToEdit.role == 'admin'}">selected</c:if>>管理者</option>
+				    <option value="fulltime" <c:if test="${userToEdit.role == 'fulltime'}">selected</c:if>>正社員</option>
+				    <option value="parttime" <c:if test="${userToEdit.role == 'parttime'}">selected</c:if>>パート・バイト</option>
+				</select>
+
 
                 <p>
                     <label for="enabled">アカウント有効:</label>
@@ -64,8 +67,8 @@
                         <input type="hidden" name="action" value="reset_password">
                         <input type="hidden" name="username" value="${userToEdit.username}">
                         <input type="hidden" name="newPassword" value="password">
-                        <input type="submit" value="パスワードリセット" class="button secondary"
-                               onclick="return confirm('本当にパスワードをリセットしますか？（デフォルトパスワード: password）');">
+                        <!-- <input type="submit" value="パスワードリセット" class="button secondary"
+                               onclick="return confirm('本当にパスワードをリセットしますか？（デフォルトパスワード: password）');"> -->
                     </form>
                 </div>
             </form>
@@ -81,10 +84,11 @@
                 <input type="password" id="password" name="password" required>
 
                 <label for="role">役割:</label>
-                <select id="role" name="role" required>
-                    <option value="employee">従業員</option>
+				<select id="role" name="role" required>
+				    <option value="fulltime">従業員</option>
+				    <option value="parttime">パート・バイト</option>
                     <option value="admin">管理者</option>
-                </select>
+				</select>
 
                 <p>
                     <label for="enabled">アカウント有効:</label>
@@ -104,6 +108,7 @@
         <tr>
             <th>ユーザーID</th>
             <th>役割</th>
+            <th>入社日</th>
             <th>有効</th>
             <th>操作</th>
         </tr>
@@ -113,6 +118,7 @@
             <tr>
                 <td>${u.username}</td>
                 <td>${u.role}</td>
+                <td>${u.startDate}</td>
                 <td>
                     <form action="users" method="post" style="display:inline;">
                         <input type="hidden" name="action" value="toggle_enabled">
@@ -141,5 +147,8 @@
         </tbody>
     </table>
 </div>
+
+<script src="${pageContext.request.contextPath}/style.js"></script>
+
 </body>
 </html>

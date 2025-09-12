@@ -1,6 +1,7 @@
 package com.example.attendance.controller;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Collection;
 
 import jakarta.servlet.RequestDispatcher;
@@ -16,6 +17,7 @@ import com.example.attendance.dto.User;
 
 @WebServlet("/users")
 public class UserServlet extends HttpServlet {
+
     private final UserDAO userDAO = new UserDAO();
 
     @Override
@@ -48,9 +50,7 @@ public class UserServlet extends HttpServlet {
             String username = req.getParameter("username");
             User user = userDAO.findByUsername(username);
             req.setAttribute("userToEdit", user);
-
-            Collection<User> users = userDAO.getAllUsers();
-            req.setAttribute("users", users);
+            req.setAttribute("users", userDAO.getAllUsers());
 
             RequestDispatcher rd = req.getRequestDispatcher("/jsp/user_management.jsp");
             rd.forward(req, resp);
@@ -80,9 +80,11 @@ public class UserServlet extends HttpServlet {
             String password = req.getParameter("password");
             String role = req.getParameter("role");
             boolean enabled = req.getParameter("enabled") != null;
+            String startDateStr = req.getParameter("startDate");
 
+            // startDate は今日
             if (userDAO.findByUsername(username) == null) {
-                userDAO.addUser(new User(username, UserDAO.hashPassword(password), role, enabled));
+                userDAO.addUser(new User(username, UserDAO.hashPassword(password), role, enabled, LocalDate.now()));
                 session.setAttribute("successMessage", "ユーザーを追加しました。");
             } else {
                 session.setAttribute("errorMessage", "ユーザーIDは既に存在します。");
@@ -92,11 +94,17 @@ public class UserServlet extends HttpServlet {
             String username = req.getParameter("username");
             String role = req.getParameter("role");
             boolean enabled = req.getParameter("enabled") != null;
+            String newPassword = req.getParameter("password");
 
             User existingUser = userDAO.findByUsername(username);
             if (existingUser != null) {
                 existingUser.setRole(role);
                 existingUser.setEnabled(enabled);
+
+                if (newPassword != null && !newPassword.isEmpty()) {
+                    userDAO.resetPassword(username, newPassword);
+                }
+
                 session.setAttribute("successMessage", "ユーザー情報を更新しました。");
             }
 

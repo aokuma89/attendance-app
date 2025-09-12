@@ -94,4 +94,7 @@ public class AttendanceDAO {
             (att.getCheckOutTime() == null ? checkOut == null : att.getCheckOutTime().equals(checkOut)) 
         ); 
     } 
+  
+
+
 }

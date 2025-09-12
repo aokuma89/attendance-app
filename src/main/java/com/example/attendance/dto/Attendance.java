@@ -22,12 +22,13 @@ public class Attendance {
     public void setCheckOutTime(LocalDateTime checkOutTime) { this.checkOutTime = checkOutTime; }
 
     public String getFormattedCheckInTime() {
-        return checkInTime != null ? checkInTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) : "";
+        return checkInTime != null ? checkInTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) : "";
     }
+
     public String getFormattedCheckOutTime() {
-        return checkOutTime != null ? checkOutTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) : "";
+        return checkOutTime != null ? checkOutTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) : "";
     }
-    
+
     public String getIsoCheckInTime() {
         return checkInTime != null ? checkInTime.toString() : "";
     }

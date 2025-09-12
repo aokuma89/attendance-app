@@ -46,6 +46,30 @@ public class AttendanceServlet extends HttpServlet {
         }
 
         String action = req.getParameter("action");
+        
+        if ("export_csv".equals(action) && "admin".equals(user.getRole())) {
+            List<Attendance> records = getFilteredRecords(req);
+
+            resp.setContentType("text/csv; charset=UTF-8");
+            resp.setHeader("Content-Disposition", "attachment; filename=attendance.csv");
+
+            try (var writer = resp.getWriter()) {
+                // ヘッダー行
+                writer.println("ユーザーID,出勤時刻,退勤時刻,勤務時間(時間)");
+
+                for (Attendance att : records) {
+                    String userId = att.getUserId();
+                    String checkIn = att.getCheckInTime() != null ? att.getCheckInTime().toString() : "";
+                    String checkOut = att.getCheckOutTime() != null ? att.getCheckOutTime().toString() : "";
+                    long hours = (att.getCheckInTime() != null && att.getCheckOutTime() != null)
+                            ? ChronoUnit.HOURS.between(att.getCheckInTime(), att.getCheckOutTime())
+                            : 0;
+
+                    writer.printf("%s,%s,%s,%d%n", userId, checkIn, checkOut, hours);
+                }
+            }
+            return; // CSV 出力して終了
+        }
 
         if ("admin".equals(user.getRole())) {
             // 管理者画面

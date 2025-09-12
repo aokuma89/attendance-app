@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style.css">
 </head>
 <body>
-	<jsp:include page="/jsp/header.jsp" />
+	<jsp:include page="/jsp/base.jsp" />
 	
 	<div class="container">
 	    <h1>マイページ</h1>
@@ -25,6 +25,22 @@
 	            <th>勤務開始日</th>
 	            <td>${user.startDate}</td>
 	        </tr>
+	        <tr>
+	            <th>ロール</th>
+	        <c:if test="${user.role == 'admin'}">
+	            <td>管理者</td>
+	        </c:if>
+	        <c:if test="${user.role == 'fulltime'}">
+	            <td>正社員</td>
+	        </c:if>
+	        <c:if test="${user.role == 'parttime'}">
+	            <td>バイトorパート</td>
+	        </c:if>
+	        </tr>
+	        <tr>
+            	<th>残有給日数</th>
+            	<td>${user.paidLeaveRemaining}日</td>
+        	</tr>
 	    </table>
 	</div>
 	

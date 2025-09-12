@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style.css">
 </head>
 <body>
-	<jsp:include page="/jsp/header.jsp" />
+	<jsp:include page="/jsp/base.jsp" />
 	
     <div class="container">
         <h1>管理者メニュー</h1>
@@ -47,7 +47,7 @@
         	<p class="error-message"><c:out value="${errorMessage}"/></p>
     	</c:if>
 
-        <a href="attendance?action=export_csv&filterUserId=<c:out value='${param.filterUserId}'/>&startDate=<c:out value='${param.startDate}'/>&endDate=<c:out value='${param.endDate}'/>" class="button buttond">勤怠履歴を CSV エクスポート</a>
+        <a href="attendance?action=export_csv&filterUserId=<c:out value="${param.filterUserId}"/>&startDate=<c:out value="${param.startDate}"/>&endDate=<c:out value="${param.endDate}"/>" class="button">勤怠履歴を CSV エクスポート</a>
 
         <h2>勤怠サマリー (合計労働時間)</h2>
         <table class="summary-table">
@@ -105,8 +105,8 @@
                 <c:forEach var="att" items="${allAttendanceRecords}">
                     <tr>
                         <td>${att.userId}</td>
-                        <td>${att.isoCheckInTime}</td>
-						<td>${att.isoCheckOutTime}</td>
+                        <td>${att.formattedCheckInTime}</td>
+                        <td>${att.formattedCheckOutTime}</td>
 
                         <td class="table-actions">
                             <form action="attendance" method="post" style="display:inline;">
@@ -125,89 +125,6 @@
                 </c:if>
             </tbody>
         </table>
-        
-        <h2>有給申請一覧</h2>
-		<table>
-		    <thead>
-		        <tr>
-		            <th>従業員 ID</th>
-		            <th>日付</th>
-		            <th>申請状況</th>
-		            <th>承認操作</th>
-		        </tr>
-		    </thead>
-		    <tbody>
-		        <c:forEach var="req" items="${leaveRequests}">
-		            <tr>
-		                <td>${req.userId}</td>
-		                <td>${req.date}</td>
-		                <td>
-		                    <c:choose>
-		                        <c:when test="${req.paidLeaveApproved}">承認済み</c:when>
-		                        <c:otherwise>申請中</c:otherwise>
-		                    </c:choose>
-		                </td>
-		                <td>
-		                    <c:if test="${!req.paidLeaveApproved}">
-		                        <form action="employee_request_admin" method="post" style="display:inline;">
-		                            <input type="hidden" name="action" value="approve_leave"/>
-		                            <input type="hidden" name="username" value="${req.userId}"/>
-		                            <input type="hidden" name="date" value="${req.date}"/>
-		                            <input type="submit" value="承認" class="button"/>
-		                        </form>
-		                    </c:if>
-		                </td>
-		            </tr>
-		        </c:forEach>
-		        <c:if test="${empty leaveRequests}">
-		            <tr><td colspan="4">申請がありません。</td></tr>
-		        </c:if>
-		    </tbody>
-		</table>
-
-
-
-
-	       <h2>残業申請一覧</h2>
-		<table>
-		    <thead>
-		        <tr>
-		            <th>ユーザー</th>
-		            <th>日付</th>
-		            <th>時間</th>
-		            <th>状態</th>
-		            <th>操作</th>
-		        </tr>
-		    </thead>
-		    <tbody>
-		        <c:forEach var="req" items="${overtimeRequests}">
-		            <tr>
-		                <td>${req.userId}</td>
-		                <td>${req.date}</td>
-		                <td>${req.overtimeHours}</td>
-		                <td>
-		                    <c:choose>
-		                        <c:when test="${req.overtimeApproved}">承認済み</c:when>
-		                        <c:otherwise>未承認</c:otherwise>
-		                    </c:choose>
-		                </td>
-		                <td>
-		                    <c:if test="${!req.overtimeApproved}">
-		                        <form action="employee_request_admin" method="post" style="display:inline;">
-		                            <input type="hidden" name="action" value="approve_overtime"/>
-		                            <input type="hidden" name="username" value="${req.userId}"/>
-		                            <input type="hidden" name="date" value="${req.date}"/>
-		                            <input type="submit" value="承認" class="button"/>
-		                        </form>
-		                    </c:if>
-		                </td>
-		            </tr>
-		        </c:forEach>
-		        <c:if test="${empty overtimeRequests}">
-		            <tr><td colspan="5">申請がありません。</td></tr>
-		        </c:if>
-		    </tbody>
-		</table>
 
 
         <h2>勤怠記録の手動追加</h2>

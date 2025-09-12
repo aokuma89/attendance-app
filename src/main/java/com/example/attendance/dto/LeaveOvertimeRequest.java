@@ -14,12 +14,24 @@ public class LeaveOvertimeRequest {
     private boolean overtimeRequested = false;
     private boolean overtimeApproved = false;
     private double overtimeHours; // 残業時間（時間単位）
+    
+    private boolean paidLeaveRejected = false;
 
-    public LeaveOvertimeRequest(LocalDate date) {
-        this.date = date;
-    }
 
     // --- getter/setter ---
+    public boolean isPaidLeaveRejected() {
+    	return paidLeaveRejected;
+    }
+    
+    public void setPaidLeaveRejected(boolean paidLeaveRejected) {
+    	this.paidLeaveRejected = paidLeaveRejected;
+    }
+    
+    
+    public LeaveOvertimeRequest(LocalDate date, String userId) {
+    	this.date = date;
+    	this.userId = userId;
+    }
     public LocalDate getDate() { return date; }
     public String getUserId() { return userId; }
     public void setUserId(String userId) { this.userId = userId; }

@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style.css">
 </head>
 <body>
-<jsp:include page="/jsp/header.jsp" />
+<jsp:include page="/jsp/base.jsp" />
 
 <div class="container">
     <h1>スケジュール管理（管理者）</h1>

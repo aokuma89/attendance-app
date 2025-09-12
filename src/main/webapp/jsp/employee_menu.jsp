@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style.css">
 </head> 
 <body> 
-	<jsp:include page="/jsp/header.jsp" />
+	<jsp:include page="/jsp/base.jsp" />
     <div class="container"> 
         <h1>従業員メニュー</h1> 
         <p class="namep">ようこそ, ${user.username}さん</p> 
@@ -20,11 +20,11 @@
  
         <!-- 出退勤ボタン -->
         <div class="attendance-buttons">
-		    <form action="attendance" method="post" class="attendance-form">
+		    <form action="${pageContext.request.contextPath}/attendance" method="post" class="attendance-form">
 		        <input type="hidden" name="action" value="check_in">
 		        <input type="submit" value="出勤" class="attendance-btn check-in">
 		    </form>
-		    <form action="attendance" method="post" class="attendance-form">
+		    <form action="${pageContext.request.contextPath}/attendance" method="post" class="attendance-form">
 		        <input type="hidden" name="action" value="check_out">
 		        <input type="submit" value="退勤" class="attendance-btn check-out">
 		    </form>
@@ -42,8 +42,8 @@
             <tbody> 
                 <c:forEach var="att" items="${attendanceRecords}"> 
                     <tr> 
-                        <td>${att.isoCheckInTime}</td>
-                        <td>${att.isoCheckOutTime}</td>
+                        <td>${att.formattedCheckInTime}</td>
+                        <td>${att.formattedCheckOutTime}</td>
                     </tr> 
                 </c:forEach> 
                 <c:if test="${empty attendanceRecords}"> 
@@ -51,33 +51,36 @@
                 </c:if> 
             </tbody> 
         </table> 
-
+        
+        <c:if test="${user.role == 'fulltime'}">
         <!-- 申請フォーム -->
         <h2>各種申請</h2>
         
         <!-- 有給申請 -->
-        <form action="employee_request" method="post" class="request-form">
+        <form action="${pageContext.request.contextPath}/employee_request" method="post" class="request-form">
             <input type="hidden" name="action" value="leave">
             <p>
                 <label for="leaveDate">有給申請日:</label>
                 <input type="date" id="leaveDate" name="date" required>
             </p>
-            <button type="submit">有給申請</button>
+            <button type="submit" class="button">有給申請</button>
         </form>
 
         <!-- 残業申請 -->
-        <form action="employee_request" method="post" class="request-form">
+        <form action="${pageContext.request.contextPath}/employee_request" method="post" class="request-form">
 		    <input type="hidden" name="action" value="overtime">
 		    <p>
-		        <label for="overtimeDate">残業日:</label>
+		        <label for="overtimeDate" class="overtime-label">残業日:</label>
 		        <input type="date" id="overtimeDate" name="date" required>
 		    </p>
 		    <p>
 		        <label for="hours">残業時間 (時間単位):</label>
 		        <input type="number" id="hours" name="hours" min="0.5" step="0.5" required>
 		    </p>
-		    <button type="submit">残業申請</button>
+		    <button type="submit" class="button">残業申請</button>
 		</form>
+		
+		</c:if>
 
     </div> 
     

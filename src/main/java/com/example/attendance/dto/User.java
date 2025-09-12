@@ -11,6 +11,8 @@ public class User {
     private String role; 
     private boolean enabled;
     private LocalDate startDate;
+    private String userId; // 新規追加
+
 
     private int paidLeaveRemaining;
 
@@ -36,6 +38,9 @@ public class User {
 
     public List<LeaveOvertimeRequest> getRequests() { return requests; }
     public void addRequest(LeaveOvertimeRequest req) { requests.add(req); }
+    
+    public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
 
 
     public String getUsername() { return username; }

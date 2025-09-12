@@ -129,7 +129,7 @@ public class UserDAO {
     public void submitLeaveRequest(String username, LocalDate date) {
         User user = users.get(username);
         if (user != null && "fulltime".equals(user.getRole())) {
-            LeaveOvertimeRequest req = new LeaveOvertimeRequest(date);
+            LeaveOvertimeRequest req = new LeaveOvertimeRequest(date, username); // userIdもセット
             req.setPaidLeaveRequested(true);
             user.addRequest(req);
         }
@@ -138,11 +138,14 @@ public class UserDAO {
     public void submitOvertimeRequest(String username, LocalDate date, double hours) {
         User user = users.get(username);
         if (user != null && "fulltime".equals(user.getRole())) {
-            LeaveOvertimeRequest req = new LeaveOvertimeRequest(date);
-            req.requestOvertime(hours); // 残業時間をセット
+            LeaveOvertimeRequest req = new LeaveOvertimeRequest(date, username); // userIdもセット
+            req.requestOvertime(hours);
             user.addRequest(req);
         }
     }
+
+
+
 
     public void approveLeave(String username, LocalDate date) {
         User user = users.get(username);
@@ -172,18 +175,19 @@ public class UserDAO {
     
     public Collection<LeaveOvertimeRequest> getAllLeaveRequests() {
         return users.values().stream()
-                .flatMap(u -> u.getRequests().stream()
-                        .peek(r -> r.setUserId(u.getUsername())) // 表示用にUserID付与
-                        .filter(LeaveOvertimeRequest::isPaidLeaveRequested))
-                .collect(Collectors.toList());
+            .flatMap(u -> u.getRequests().stream()
+                .filter(LeaveOvertimeRequest::isPaidLeaveRequested)
+                .peek(r -> r.setUserId(u.getUsername()))) // userIdを確実に付与
+            .collect(Collectors.toList());
     }
 
     public Collection<LeaveOvertimeRequest> getAllOvertimeRequests() {
         return users.values().stream()
-                .flatMap(u -> u.getRequests().stream()
-                        .peek(r -> r.setUserId(u.getUsername())) // 表示用にUserID付与
-                        .filter(LeaveOvertimeRequest::isOvertimeRequested))
-                .collect(Collectors.toList());
+            .flatMap(u -> u.getRequests().stream()
+                .filter(LeaveOvertimeRequest::isOvertimeRequested)
+                .peek(r -> r.setUserId(u.getUsername())))
+            .collect(Collectors.toList());
     }
+
 
 }

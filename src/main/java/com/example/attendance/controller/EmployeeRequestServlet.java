@@ -29,8 +29,7 @@ public class EmployeeRequestServlet extends HttpServlet {
             return;
         }
 
-        // フォームから取得
-        String action = req.getParameter("action"); // "leave" or "overtime"
+        String action = req.getParameter("action");
         String dateStr = req.getParameter("date");
         String hoursStr = req.getParameter("hours");
 
@@ -40,14 +39,33 @@ public class EmployeeRequestServlet extends HttpServlet {
             LeaveOvertimeRequest request = new LeaveOvertimeRequest(date, currentUser.getUsername());
             request.setPaidLeaveRequested(true);
             currentUser.addRequest(request);
+            session.setAttribute("successMessage", "申請が送信されました。");
+            resp.sendRedirect(req.getContextPath() + "/jsp/employee_menu.jsp");
+            return;
         } else if ("overtime".equals(action) && hoursStr != null) {
             double hours = Double.parseDouble(hoursStr);
-            LeaveOvertimeRequest request = new LeaveOvertimeRequest(date, currentUser.getUsername());
-            request.requestOvertime(hours);
-            currentUser.addRequest(request);
+            int year = date.getYear();
+            int month = date.getMonthValue();
+            double monthlyTotal = currentUser.getMonthlyOvertimeHours(year, month);
+            if (monthlyTotal + hours > 45.0) {
+                LeaveOvertimeRequest request = new LeaveOvertimeRequest(date, currentUser.getUsername());
+                request.setOvertimeRequested(true);
+                request.setOvertimeHours(hours);
+                request.setOvertimeRejected(true);
+                currentUser.addRequest(request);
+                req.setAttribute("errorMessage", "残業申請時間が月45時間を超えています。申請は却下されました。");
+                req.getRequestDispatcher("/jsp/employee_menu.jsp").forward(req, resp);
+                return;
+            } else {
+                LeaveOvertimeRequest request = new LeaveOvertimeRequest(date, currentUser.getUsername());
+                request.requestOvertime(hours);
+                currentUser.addRequest(request);
+                session.setAttribute("successMessage", "申請が送信されました。");
+                resp.sendRedirect(req.getContextPath() + "/jsp/employee_menu.jsp");
+                return;
+            }
         }
 
-        // デバッグ用ログ
         System.out.println("=== デバッグ: 申請後のユーザー情報 ===");
         System.out.println("ユーザー: " + currentUser.getUsername());
         currentUser.getRequests().forEach(r -> {
@@ -60,8 +78,5 @@ public class EmployeeRequestServlet extends HttpServlet {
                                ", 申請者ID: " + r.getUserId());
         });
         System.out.println("=== デバッグここまで ===");
-
-        session.setAttribute("successMessage", "申請が送信されました。");
-        resp.sendRedirect(req.getContextPath() + "/jsp/employee_menu.jsp");
     }
 }

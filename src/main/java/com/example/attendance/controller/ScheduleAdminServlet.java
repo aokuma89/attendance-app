@@ -72,7 +72,6 @@ public class ScheduleAdminServlet extends HttpServlet {
             }
         }
 
-        // コンテキストパス付きでリダイレクト
         resp.sendRedirect(req.getContextPath() + "/schedule_admin");
     }
 

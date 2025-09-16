@@ -23,7 +23,6 @@
             <h2>${u.username} さん</h2>
             <p>残有給日数: ${u.paidLeaveRemaining}日</p>
 
-            <!-- 残業申請 -->
             <h3>残業申請</h3>
             <div class="scroll-table">
             <table>
@@ -43,14 +42,26 @@
                             <tr>
                                 <td>${r.date}</td>
                                 <td>${r.overtimeHours}</td>
-                                <td>${r.overtimeApproved ? '承認済' : '未承認'}</td>
                                 <td>
-                                    <c:if test="${!r.overtimeApproved}">
+                                    <c:choose>
+                                        <c:when test="${r.overtimeApproved}">承認済</c:when>
+                                        <c:when test="${r.overtimeRejected}">却下済</c:when>
+                                        <c:otherwise>未承認</c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td>
+                                    <c:if test="${!r.overtimeApproved && !r.overtimeRejected}">
                                         <form action="employee_request_admin" method="post" style="display:inline;">
                                             <input type="hidden" name="action" value="approve_overtime">
                                             <input type="hidden" name="username" value="${u.username}">
                                             <input type="hidden" name="date" value="${r.date}">
                                             <input type="submit" value="承認" class="attendance-button">
+                                        </form>
+                                        <form action="employee_request_admin" method="post" style="display:inline;">
+                                            <input type="hidden" name="action" value="reject_overtime">
+                                            <input type="hidden" name="username" value="${u.username}">
+                                            <input type="hidden" name="date" value="${r.date}">
+                                            <input type="submit" value="却下" class="button danger">
                                         </form>
                                     </c:if>
                                 </td>
@@ -63,8 +74,7 @@
                 </tbody>
             </table>
             </div>
-
-            <!-- 有給申請 -->
+            
 			<h3>有給申請</h3>
 			<div class="scroll-table">
 			<table>
@@ -91,14 +101,14 @@
 			                    </td>
 			                    <td>
 			                        <c:if test="${!r.paidLeaveApproved && !r.paidLeaveRejected}">
-			                            <!-- 承認ボタン -->
+		
 			                            <form action="employee_request_admin" method="post" style="display:inline;">
 			                                <input type="hidden" name="action" value="approve_leave">
 			                                <input type="hidden" name="username" value="${u.username}">
 			                                <input type="hidden" name="date" value="${r.date}">
 			                                <input type="submit" value="承認" class="attendance-button">
 			                            </form>
-			                            <!-- 却下ボタン -->
+
 			                            <form action="employee_request_admin" method="post" style="display:inline;">
 			                                <input type="hidden" name="action" value="reject_leave">
 			                                <input type="hidden" name="username" value="${u.username}">

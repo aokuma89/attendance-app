@@ -7,9 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  // ハンバーガークリック
   hamburger.addEventListener('click', (e) => {
-    e.stopPropagation(); // 外側クリック処理を阻止
+    e.stopPropagation();
     hamburger.classList.toggle('active');
     nav.classList.toggle('active');
 
@@ -18,7 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
     nav.setAttribute('aria-hidden', !isOpen);
   });
 
-  // メニュー外クリックで閉じる
   document.addEventListener('click', (e) => {
     if (!e.target.closest('.nav') && !e.target.closest('.hamburger') && nav.classList.contains('active')) {
       hamburger.classList.remove('active');

@@ -65,8 +65,7 @@ public class ScheduleServlet extends HttpServlet {
 
                 Schedule newSchedule = new Schedule(date, startTime, endTime);
 
-                // 直接 addSchedule ではなく DAO 経由にする
-                UserDAO userDAO = new UserDAO(); // DAO インスタンス生成
+                UserDAO userDAO = new UserDAO(); 
                 userDAO.submitSchedule(currentUser.getUsername(), newSchedule); // ここで 10件以上なら削除もされる
 
                 session.setAttribute("successMessage", "スケジュールを提出しました。");

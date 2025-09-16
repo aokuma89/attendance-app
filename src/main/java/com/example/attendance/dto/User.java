@@ -11,7 +11,7 @@ public class User {
     private String role; 
     private boolean enabled;
     private LocalDate startDate;
-    private String userId; // 新規追加
+    private String userId;
 
 
     private int paidLeaveRemaining;
@@ -54,7 +54,6 @@ public class User {
     public void setEnabled(boolean enabled) { this.enabled = enabled; }
     public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
 
-    // --- 有給・スケジュール関連 ---
     public List<Schedule> getSchedules() { return schedules; }
     public void addSchedule(Schedule s) { schedules.add(s); }
     public void removeSchedule(Schedule s) { schedules.remove(s); }
@@ -62,5 +61,19 @@ public class User {
     public int getPaidLeaveRemaining() { return paidLeaveRemaining; }
     public void usePaidLeave() { 
         if (paidLeaveRemaining > 0) paidLeaveRemaining--; 
+    }
+
+    /**
+     * 指定年月の承認済残業申請合計時間を取得
+     */
+    public double getMonthlyOvertimeHours(int year, int month) {
+        double total = 0.0;
+        for (LeaveOvertimeRequest req : requests) {
+            if (req.isOvertimeRequested() && req.getDate().getYear() == year && req.getDate().getMonthValue() == month
+                && req.isOvertimeApproved()) {
+                total += req.getOvertimeHours();
+            }
+        }
+        return total;
     }
 }

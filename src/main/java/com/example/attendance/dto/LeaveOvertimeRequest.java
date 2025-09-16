@@ -4,18 +4,17 @@ import java.time.LocalDate;
 
 public class LeaveOvertimeRequest {
     private LocalDate date;
-    private String userId; // ★追加: 申請者ID
+    private String userId;
 
-    // 有給関連
     private boolean paidLeaveRequested = false;
     private boolean paidLeaveApproved = false;
 
-    // 残業関連
     private boolean overtimeRequested = false;
     private boolean overtimeApproved = false;
-    private double overtimeHours; // 残業時間（時間単位）
+    private double overtimeHours;
     
     private boolean paidLeaveRejected = false;
+    private boolean overtimeRejected = false;
 
 
     // --- getter/setter ---
@@ -26,6 +25,9 @@ public class LeaveOvertimeRequest {
     public void setPaidLeaveRejected(boolean paidLeaveRejected) {
     	this.paidLeaveRejected = paidLeaveRejected;
     }
+    
+    public boolean isOvertimeRejected() { return overtimeRejected; }
+    public void setOvertimeRejected(boolean rejected) { this.overtimeRejected = rejected; }
     
     
     public LeaveOvertimeRequest(LocalDate date, String userId) {

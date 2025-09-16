@@ -38,7 +38,6 @@ public class AttendanceServlet extends HttpServlet {
             return;
         }
 
-        // 成功メッセージをリクエストにセット
         String message = (String) session.getAttribute("successMessage");
         if (message != null) {
             req.setAttribute("successMessage", message);
@@ -54,7 +53,6 @@ public class AttendanceServlet extends HttpServlet {
             resp.setHeader("Content-Disposition", "attachment; filename=attendance.csv");
 
             try (var writer = resp.getWriter()) {
-                // ヘッダー行
                 writer.println("ユーザーID,出勤時刻,退勤時刻,勤務時間(時間)");
 
                 for (Attendance att : records) {
@@ -68,11 +66,10 @@ public class AttendanceServlet extends HttpServlet {
                     writer.printf("%s,%s,%s,%d%n", userId, checkIn, checkOut, hours);
                 }
             }
-            return; // CSV 出力して終了
+            return;
         }
 
         if ("admin".equals(user.getRole())) {
-            // 管理者画面
             List<Attendance> allRecords;
             if ("filter".equals(action)) {
                 allRecords = getFilteredRecords(req);
@@ -82,11 +79,9 @@ public class AttendanceServlet extends HttpServlet {
 
             req.setAttribute("allAttendanceRecords", allRecords);
             
-            // 申請情報（有給・残業）の有無を確認
             boolean hasLeaveRequest = false;
             boolean hasOvertimeRequest = false;
 
-            // ★ AttendanceDAO ではなく UserDAO から取得
             Collection<User> allUsers = userDAO.getAllUsers(); 
 
             for (User u : allUsers) {
@@ -104,7 +99,6 @@ public class AttendanceServlet extends HttpServlet {
             req.setAttribute("hasLeaveRequest", hasLeaveRequest);
             req.setAttribute("hasOvertimeRequest", hasOvertimeRequest);
 
-            // 勤怠サマリー
             Map<String, Long> totalHoursByUser = allRecords.stream()
                     .collect(Collectors.groupingBy(
                             Attendance::getUserId,
@@ -122,7 +116,6 @@ public class AttendanceServlet extends HttpServlet {
             RequestDispatcher rd = req.getRequestDispatcher("/jsp/admin_menu.jsp");
             rd.forward(req, resp);
         } else {
-            // 社員画面
             List<Attendance> attendanceRecords = attendanceDAO.findByUserId(user.getUsername());
             req.setAttribute("attendanceRecords", attendanceRecords);
             RequestDispatcher rd = req.getRequestDispatcher("/jsp/employee_menu.jsp");
@@ -169,7 +162,6 @@ public class AttendanceServlet extends HttpServlet {
             session.setAttribute("errorMessage", "処理中にエラーが発生しました: " + e.getMessage());
         }
 
-        // リダイレクト
         if ("admin".equals(user.getRole())) {
             resp.sendRedirect("attendance?action=filter&filterUserId="
                     + (req.getParameter("filterUserId") != null ? req.getParameter("filterUserId") : "")

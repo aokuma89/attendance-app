@@ -34,17 +34,8 @@
                 <input type="text" id="username" name="username"
                        value="${userToEdit.username}" readonly required>
 
-                <!-- <label for="password">パスワード:</label>
-                <input type="password" id="password" name="password"> -->
-                
                 <label for="password">パスワード:</label>
 				<input type="password" id="password" name="password"placeholder="変更する場合は入力してください">
-
-             <!--    <p class="error-message">
-                    ※一度設定したパスワードは変更できません。
-                </p> -->
-                
-                <!-- パスワードをリセットする場合はパスワードリセットボタン押してください。 -->
 
                 <label for="role">役割:</label>
 				<select id="role" name="role" required>
@@ -67,8 +58,6 @@
                         <input type="hidden" name="action" value="reset_password">
                         <input type="hidden" name="username" value="${userToEdit.username}">
                         <input type="hidden" name="newPassword" value="password">
-                        <!-- <input type="submit" value="パスワードリセット" class="button secondary"
-                               onclick="return confirm('本当にパスワードをリセットしますか？（デフォルトパスワード: password）');"> -->
                     </form>
                 </div>
             </form>

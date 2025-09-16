@@ -75,7 +75,6 @@ public class EmployeeRequestAdminServlet extends HttpServlet {
                     break;
 
                 case "reject_leave":
-                    // 安全に削除する
                     boolean removed = user.getRequests().removeIf(r ->
                             r.getDate().equals(date) && r.isPaidLeaveRequested() && !r.isPaidLeaveApproved()
                     );
@@ -92,10 +91,18 @@ public class EmployeeRequestAdminServlet extends HttpServlet {
                         }
                     });
                     break;
+
+                case "reject_overtime":
+                    user.getRequests().forEach(r -> {
+                        if (r.getDate().equals(date) && r.isOvertimeRequested() && !r.isOvertimeApproved() && !r.isOvertimeRejected()) {
+                            r.setOvertimeRejected(true);
+                            session.setAttribute("successMessage", username + " の残業申請を却下しました。");
+                        }
+                    });
+                    break;
             }
         }
 
-        // ページをリロードすることで doGet が呼ばれる
         resp.sendRedirect(req.getContextPath() + "/employee_request_admin");
     }
 

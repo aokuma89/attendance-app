@@ -81,7 +81,7 @@
 		    <button type="submit" class="button">残業申請</button>
 		</form>
 		
-		</c:if>
+		
 
         <!-- 申請履歴表示 -->
         <h2>申請履歴</h2>
@@ -130,6 +130,7 @@
                 </c:if>
             </tbody>
         </table>
+        </c:if>
         <!-- 申請履歴表示ここまで -->
 
     </div> 

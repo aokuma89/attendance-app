@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> 
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="ja">
@@ -20,25 +20,26 @@
     </c:if>
 
     <c:if test="${user.role == 'parttime'}">
-	    <form action="schedule" method="post">
-	        <input type="hidden" name="action" value="submit">
-	        <label>日付:</label>
-	        <input type="date" name="date" required>
-	
-	        <label>開始時間:</label>
-	        <input type="time" name="startTime" required>
-	
-	        <label>終了時間:</label>
-	        <input type="time" name="endTime" required>
-	
-	        <input type="submit" value="提出" class="attendance-button">
-	    </form>
-	</c:if>
-	
-	<c:if test="${user.role != 'parttime'}">
-	    <p style="color:red;">※正社員・管理者はスケジュール提出できません</p>
-	</c:if>
+    <div class="input-box">
+        <form action="schedule" method="post" class="schedule-form">
+            <input type="hidden" name="action" value="submit">
+            <label>日付:</label>
+            <input type="date" name="date" required>
 
+            <label>開始時間:</label>
+            <input type="time" name="startTime" required>
+
+            <label>終了時間:</label>
+            <input type="time" name="endTime" required>
+
+            <input type="submit" value="提出" class="attendance-button">
+        </form>
+    </div>
+    </c:if>
+
+    <c:if test="${user.role != 'parttime'}">
+        <p style="color:red;">※正社員・管理者はスケジュール提出できません</p>
+    </c:if>
 
     <h2>提出済みスケジュール</h2>
     <div class="scroll-table">
@@ -70,6 +71,6 @@
     </div>
 </div>
 
-    <script src="${pageContext.request.contextPath}/style.js"></script>
+<script src="${pageContext.request.contextPath}/style.js"></script>
 </body>
 </html>

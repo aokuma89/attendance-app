@@ -461,3 +461,51 @@ tr:hover {
 .overtime-label {
 	margin-top: 20px !important;
 }
+
+
+/* スケジュール提出ページ用スタイル */
+.schedule-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 24px;
+}
+.schedule-form label {
+    min-width: 80px;
+}
+.schedule-form input[type="date"],
+.schedule-form input[type="time"] {
+    width: 140px;
+}
+.attendance-button {
+    margin-left: 16px;
+}
+.schedule-form input[type="submit"] {
+    background-color: #1abc9c;
+    color: white;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: all 0.25s;
+    display: inline-block;
+    box-shadow: 0 3px 8px rgba(26, 188, 156, 0.25);
+}
+.schedule-form input[type="submit"]:hover {
+    background-color: #16a085;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(26, 188, 156, 0.3);
+}
+.schedule-form input[type="date"]:focus,
+.schedule-form input[type="time"]:focus {
+    border-color: #1abc9c;
+    outline: none;
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.2);
+}
+.input-box{
+	margin-top: 50px !important;
+}

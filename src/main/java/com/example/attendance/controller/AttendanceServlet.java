@@ -71,10 +71,12 @@ public class AttendanceServlet extends HttpServlet {
 
         if ("admin".equals(user.getRole())) {
             List<Attendance> allRecords;
+            String filterUserId = req.getParameter("filterUserId");
             if ("filter".equals(action)) {
                 allRecords = getFilteredRecords(req);
             } else {
                 allRecords = attendanceDAO.findAll();
+                filterUserId = null;
             }
 
             req.setAttribute("allAttendanceRecords", allRecords);
@@ -110,8 +112,9 @@ public class AttendanceServlet extends HttpServlet {
                             })
                     ));
             req.setAttribute("totalHoursByUser", totalHoursByUser);
-            req.setAttribute("monthlyWorkingHours", attendanceDAO.getMonthlyWorkingHours(null));
-            req.setAttribute("monthlyCheckInCounts", attendanceDAO.getMonthlyCheckInCounts(null));
+
+            req.setAttribute("monthlyWorkingHours", attendanceDAO.getMonthlyWorkingHours(filterUserId));
+            req.setAttribute("monthlyCheckInCounts", attendanceDAO.getMonthlyCheckInCounts(filterUserId));
 
             RequestDispatcher rd = req.getRequestDispatcher("/jsp/admin_menu.jsp");
             rd.forward(req, resp);

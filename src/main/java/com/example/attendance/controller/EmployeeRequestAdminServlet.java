@@ -74,14 +74,14 @@ public class EmployeeRequestAdminServlet extends HttpServlet {
                     });
                     break;
 
-                case "reject_leave":
-                    boolean removed = user.getRequests().removeIf(r ->
-                            r.getDate().equals(date) && r.isPaidLeaveRequested() && !r.isPaidLeaveApproved()
-                    );
-                    if (removed) {
-                        session.setAttribute("successMessage", username + " の有給を却下しました。");
-                    }
-                    break;
+                 case "reject_leave":
+                     user.getRequests().forEach(r -> {
+                         if (r.getDate().equals(date) && r.isPaidLeaveRequested() && !r.isPaidLeaveApproved() && !r.isPaidLeaveRejected()) {
+                             r.setPaidLeaveRejected(true);
+                             session.setAttribute("successMessage", username + " の有給を却下しました。");
+                         }
+                     });
+                     break;
 
                 case "approve_overtime":
                     user.getRequests().forEach(r -> {

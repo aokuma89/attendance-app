@@ -93,11 +93,11 @@
 			                <tr>
 			                    <td>${r.date}</td>
 			                    <td>
-			                        <c:choose>
-			                            <c:when test="${r.paidLeaveApproved}">承認済</c:when>
-			                            <c:when test="${r.paidLeaveRejected}">却下済</c:when>
-			                            <c:otherwise>未承認</c:otherwise>
-			                        </c:choose>
+									<c:choose>
+									    <c:when test="${r.paidLeaveApproved}">承認済</c:when>
+									    <c:when test="${r.paidLeaveRejected}">却下済み</c:when>
+									    <c:otherwise>未承認</c:otherwise>
+									</c:choose>
 			                    </td>
 			                    <td>
 			                        <c:if test="${!r.paidLeaveApproved && !r.paidLeaveRejected}">

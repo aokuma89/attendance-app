@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style.css">
 </head>
 
-<!-- 共通ヘッダー -->
 <div class="header">
   <!-- ハンバーガーメニュー -->
   <button class="hamburger" aria-label="メニュー" aria-controls="nav-menu" aria-expanded="false">

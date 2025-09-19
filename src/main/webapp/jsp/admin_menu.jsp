@@ -74,7 +74,7 @@
 	      <span style="font-size: 0.95em; margin-bottom: 4px;">
 	        <c:if test="${entry.value != 1}">${entry.value}日</c:if>
 	      </span>
-	      <div class="bar bar-blue" style="height: ${entry.value * 10}px; width: 28px; position: relative;"></div>
+	      <div class="bar bar-blue" style="height: ${entry.value * 5}px; width: 28px; position: relative;"></div>
 	      <span style="font-size: 0.9em; margin-top: 6px; color: #444;">${entry.key}</span>
 	    </div>
 	  </c:forEach>
@@ -120,28 +120,28 @@
 	    </table>
 	</div>
 
-        <h2>勤怠記録の手動追加</h2>
-        <form action="attendance" method="post">
-            <input type="hidden" name="action" value="add_manual">
-            <p>
-                <label for="manualUserId">ユーザーID:</label>
-                <input type="text" id="manualUserId" name="userId" required>
-            </p>
-            <p>
-                <label for="manualCheckInTime">出勤時刻:</label>
-                <input type="datetime-local" id="manualCheckInTime" name="checkInTime" required>
-            </p>
-            <p>
-                <label for="manualCheckOutTime">退勤時刻 (任意):</label>
-                <input type="datetime-local" id="manualCheckOutTime" name="checkOutTime">
-            </p>
-            <div class="button-group">
-                <input type="submit" value="追加">
-            </div>
-        </form>
-    </div>
-    
-    <script src="${pageContext.request.contextPath}/style.js?v=1"></script>
+    <h2>勤怠記録の手動追加</h2>
+    <form action="attendance" method="post">
+        <input type="hidden" name="action" value="add_manual">
+        <p>
+            <label for="manualUserId">ユーザーID:</label>
+            <input type="text" id="manualUserId" name="userId" required>
+        </p>
+        <p>
+            <label for="manualCheckInTime">出勤時刻:</label>
+            <input type="datetime-local" id="manualCheckInTime" name="checkInTime" required>
+        </p>
+        <p>
+            <label for="manualCheckOutTime">退勤時刻 (任意):</label>
+            <input type="datetime-local" id="manualCheckOutTime" name="checkOutTime">
+        </p>
+        <div class="button-group">
+            <input type="submit" value="追加">
+        </div>
+    </form>
+</div>
+
+<script src="${pageContext.request.contextPath}/style.js?v=1"></script>
     
 </body>
 </html>

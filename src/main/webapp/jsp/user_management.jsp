@@ -74,7 +74,7 @@
 
                 <label for="role">役割:</label>
 				<select id="role" name="role" required>
-				    <option value="fulltime">従業員</option>
+				    <option value="fulltime">正社員</option>
 				    <option value="parttime">パート・バイト</option>
                     <option value="admin">管理者</option>
 				</select>
